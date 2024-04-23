@@ -1,0 +1,19 @@
+Algorithm for Attention-based Federated Learning for Emotion recognition using Multi-Modal Physiological data (AFLEMP)
+
+Input: Training data 𝐷 = {(𝑥1, 𝑦1), …, (𝑥𝑛, 𝑦𝑛)}, number of clients 𝐾 (K=3, 5, 7, 10, ..20), number of communication rounds 𝑇 (T= 50, 100 and
+200), learning rate 𝜂, batch size 𝐵, weighted aggregation method, attention mechanism.
+Output: Trained model 𝑤∗
+1: Initialize global model parameters 𝑤0
+2: for each communication round 𝑡 = 1, …, 𝑇 do
+3: for each client 𝑘 = 1,… , 𝐾 in parallel do
+4: Client 𝑘 selects a random subset 𝐵𝑘 ⊂ 𝐷 of size 𝐵.
+5: Client 𝑘 computes the local gradient: 𝑔𝑘 ← ∇𝑓𝑘(𝑤𝑡−1;𝐵𝑘), where 𝑓𝑘 is the local loss function.
+6: Client 𝑘 computes the attention weights: 𝑎𝑘 ← softmax(𝐖𝑎𝐱𝑘), where 𝐖𝑎 is the attention matrix and 𝐱𝑘
+is the local feature vector.
+7: Client 𝑘 computes the weighted gradient: ̃𝑔𝑘 ← 𝑎𝑘𝑔𝑘
+8: Client 𝑘 sends the weighted gradient ̃𝑔𝑘 to the server.
+9: end for
+10: Server aggregates the weighted gradients: ̃𝑔 ← ∑𝐾 𝑘=1 ̃𝑔𝑘 using the weighted aggregation method (Eq. (13)).
+11: Server updates the global model: 𝑤𝑡 ← 𝑤𝑡−1 − 𝜂 ̃𝑔.
+12: end for
+13: return 𝑤∗ ← 𝑤𝑇
